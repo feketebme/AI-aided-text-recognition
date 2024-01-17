@@ -1,0 +1,6 @@
+path: D:\PycharmProjects\graphisoft\Data\my_generated_images
+train: images/train
+val: images/val
+
+names:
+  0:text

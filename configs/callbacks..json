@@ -1,0 +1,14 @@
+{
+  "model_checkpoint": {
+    "monitor": "val_loss",
+    "dirpath": "./saved_models/",
+    "filename": "best_model",
+    "save_top_k": 1,
+    "mode": "min"
+  },
+  "early_stopping": {
+    "monitor": "val_loss",
+    "patience": 5,
+    "mode": "min"
+  }
+}

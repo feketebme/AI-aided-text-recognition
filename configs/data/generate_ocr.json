@@ -1,0 +1,43 @@
+{
+  "number_of_images": 100000,
+  "max_num_words": 25,
+  "output_folder": "D:/data_ocr",
+  "possible_background_colors": [
+    [0, 0, 0],
+    [255, 255, 255],
+    [255, 0, 0],
+    [150, 0, 0],
+    [50, 50, 50],
+    [120, 120, 120],
+    [200, 200, 200],
+    [0, 255, 0],
+    [0, 0, 255],
+    [0, 255, 255],
+    [255, 0, 255],
+    [255, 255, 0],
+    [128, 0, 128],
+    [0,0,0]
+  ],
+  "probabilities_background_colors": [0.1, 0.2, 0.0444, 0.0444, 0.1, 0.1, 0.1, 0.0444, 0.0444, 0.0444, 0.0444, 0.0444, 0.0444, 0.0444],
+  "possible_fonts": [
+    "cv2.FONT_HERSHEY_SIMPLEX",
+    "cv2.FONT_HERSHEY_COMPLEX",
+    "cv2.FONT_HERSHEY_DUPLEX",
+    "cv2.FONT_HERSHEY_PLAIN",
+    "cv2.FONT_HERSHEY_TRIPLEX",
+    "cv2.FONT_HERSHEY_COMPLEX_SMALL",
+    "cv2.FONT_HERSHEY_SCRIPT_SIMPLEX",
+    "cv2.FONT_HERSHEY_SCRIPT_COMPLEX",
+    "cv2.FONT_ITALIC"
+  ],
+  "image_size_properties": [
+    [300, 780],
+    [500, 1200]
+  ],
+  "path_to_logo": "./logo",
+  "max_num_logo": 5,
+  "max_num_rectangle": 5,
+  "max_attempts_avoid_overlapping": 100,
+  "type": "val",
+  "aim": "ocr"
+}
