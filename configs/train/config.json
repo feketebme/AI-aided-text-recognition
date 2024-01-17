@@ -1,0 +1,21 @@
+{
+    "model": {
+        "hp_initial_lr_rate": 1e-3,
+        "hp_lr_scheduler_relative_threshold": 0.0,
+        "hp_lr_scheduler_patience": 10,
+        "hp_lr_reduce_factor": 0.1,
+        "hp_weight_decay": 0.01,
+        "hp_batch_size": null,
+        "activation": "leaky_relu",
+        "dropout": 0.3
+
+    },
+    "data": {
+        "annotation_paths": ["D:/data_ocr/labels/train/labels.txt","D:/data_ocr/labels/val/labels.txt"],
+        "split_dataset": [0.8, 0.1, 0.1],
+        "shuffle": true,
+        "batch_size": 64,
+        "image_size": [32, 128]
+
+    }
+}

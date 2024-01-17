@@ -7,11 +7,12 @@ import os
 import tqdm
 import logging
 import colorlog
-from utils import initialize_with_config, do_overlap, Point
+
 import glob
 import argparse
 import albumentations as A
-
+from Data.utils_data import do_overlap, Point
+from utils import initialize_with_config
 
 class DatasetGenerator:
 
@@ -27,7 +28,7 @@ class DatasetGenerator:
         self.possible_fonts = kwargs.pop("possible_fonts", ['cv2.FONT_HERSHEY_SIMPLEX', 'cv2.FONT_HERSHEY_COMPLEX',
                                                             'cv2.FONT_HERSHEY_SCRIPT_SIMPLEX'])
         self.image_size_properties = kwargs.pop("image_size_properties", [(300, 780), [500, 1200]])
-        self.path_to_logo = kwargs.pop("path_to_logo", "./logo")
+        self.path_to_logo = kwargs.pop("path_to_logo", "../logo")
         self.max_num_logo = kwargs.pop("max_num_logo", 5)
         self.max_num_rectangle = kwargs.pop("max_num_rectangle", 5)
         self.max_attempts_avoid_overlapping = kwargs.pop("max_attempts_avoid_overlapping", 100)
@@ -314,7 +315,7 @@ class DatasetGenerator:
         self.logger.warning("Please do not turn off the computer until this process finishes.")
         labels=[]
 
-        for i in tqdm.tqdm(range(self.number_of_images)):
+        for i in tqdm.tqdm(range(self.number_of_images),desc=f"Generate {self.type} images"):
             # Generate a random background
             background_color = \
                 random.choices(self.possible_background_colors, weights=self.probabilities_background_colors)[0]
@@ -329,7 +330,8 @@ class DatasetGenerator:
             self.put_text_to_image(image=img, text=text, font=font, position=(random.randint(0,image_width-text_width),image_height-random.randint(0,image_height-text_height)), text_scale=text_scale)
             # Save the image
             image_path = f"{self.output_folder}/images/{self.type}/{i + 1}.png"
-            labels.append(f"{image_path}; {text}")
+            image_path_to_save=F"/images/{self.type}/{i + 1}.png"
+            labels.append(f"{image_path_to_save}; {text}")
             try:
                 transformed = self.augmentation(image=img)
 
@@ -343,7 +345,8 @@ class DatasetGenerator:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Initialize with config file")
-    parser.add_argument("--config", type=str, help="Path to the config file", required=True)
+    parser.add_argument("--config_data", type=str, help="Path to the data config file", required=True)
+    parser.add_argument("--config_model", type=str, help="Path to the data config file", required=True)
     args = parser.parse_args()
 
     dataset = initialize_with_config(DatasetGenerator, config_file=args.config)

@@ -1,6 +1,6 @@
-from utils import read_json_config
+from Data.utils_data import read_json_config
 import pytorch_lightning as pl
-
+from pytorch_lightning.callbacks import ModelSummary
 # List of callback names
 callback_names = [
     "model_checkpoint",

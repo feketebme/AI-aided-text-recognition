@@ -1,5 +1,5 @@
 {
-  "number_of_images": 100000,
+  "number_of_images": 1000000,
   "max_num_words": 25,
   "output_folder": "D:/data_ocr",
   "possible_background_colors": [
@@ -38,6 +38,6 @@
   "max_num_logo": 5,
   "max_num_rectangle": 5,
   "max_attempts_avoid_overlapping": 100,
-  "type": "val",
+  "type": "train",
   "aim": "ocr"
 }

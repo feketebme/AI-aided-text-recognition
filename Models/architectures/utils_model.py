@@ -2,8 +2,45 @@ import torch.nn as nn
 import torch
 
 
+def activation_layer(activation: str = "relu", alpha: float = 0.1, inplace: bool = True):
+    """ Activation layer wrapper for various activation functions
+
+    Args:
+        activation: str, activation function name (default: 'relu')
+        alpha: float (LeakyReLU activation function parameter)
+
+    Returns:
+        torch.Tensor: activation layer
+    """
+    if activation.lower() == "relu":
+        return nn.ReLU(inplace=inplace)
+
+    elif activation.lower() == "leaky_relu":
+        return nn.LeakyReLU(negative_slope=alpha, inplace=inplace)
+
+    elif activation.lower() == "sigmoid":
+        return nn.Sigmoid()
+
+    elif activation.lower() == "tanh":
+        return nn.Tanh()
+
+    elif activation.lower() == "softmax":
+        return nn.Softmax(dim=-1)
+
+    elif activation.lower() == "elu":
+        return nn.ELU(alpha=alpha, inplace=inplace)
+
+    elif activation.lower() == "selu":
+        return nn.SELU(inplace=inplace)
+
+    # Add more activation functions as needed
+
+    else:
+        raise ValueError(f"Unsupported activation function: {activation}")
+
+
 class InceptionBlock(nn.Module):
-    def __init__(self, in_channels, out1x1, reduce3x3, out3x3, reduce5x5, out5x5, out1x1pool):
+    def __init__(self, in_channels, out1x1, reduce3x3, out3x3, reduce5x5, out5x5, out1x1pool, activation='Relu',leaky_alpha=0.1,inplace=True):
         super(InceptionBlock, self).__init__()
 
         # 1x1 convolution branch
@@ -12,14 +49,14 @@ class InceptionBlock(nn.Module):
         # 1x1 convolution followed by 3x3 convolution branch
         self.branch3x3 = nn.Sequential(
             nn.Conv2d(in_channels, reduce3x3, kernel_size=1),
-            nn.ReLU(inplace=True),
+            activation_layer(activation='Relu',leaky_alpha=0.1,inplace=True),
             nn.Conv2d(reduce3x3, out3x3, kernel_size=3, padding=1)
         )
 
         # 1x1 convolution followed by 5x5 convolution branch
         self.branch5x5 = nn.Sequential(
             nn.Conv2d(in_channels, reduce5x5, kernel_size=1),
-            nn.ReLU(inplace=True),
+            activation_layer(activation='Relu', leaky_alpha=0.1, inplace=True),
             nn.Conv2d(reduce5x5, out5x5, kernel_size=5, padding=2)
         )
 
@@ -41,21 +78,21 @@ class InceptionBlock(nn.Module):
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, activation='leaky_relu', dropout=0.2):
+    def __init__(self, in_channels, out_channels, activation='leaky_relu',leaky_alpha=0.1, dropout=0.2,stride=1):
         super(ResidualBlock, self).__init__()
 
         self.activation = activation
         self.dropout = dropout
 
-        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
         self.bn1 = nn.BatchNorm2d(out_channels)
-        self.relu1 = nn.LeakyReLU(0.1)  # Assuming alpha value for LeakyReLU is 0.1
+        self.relu1 = activation_layer(activation=activation,alpha=leaky_alpha,inplace=True)
         self.dropout = nn.Dropout2d(p=dropout)
 
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
         self.bn2 = nn.BatchNorm2d(out_channels)
 
-        self.shortcut = nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1, padding=0)
+        self.shortcut = nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, padding=0)
         self.bn_shortcut = nn.BatchNorm2d(out_channels)
 
     def forward(self, x):
